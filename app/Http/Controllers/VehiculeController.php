@@ -12,7 +12,8 @@ class VehiculeController extends Controller
      */
     public function index()
     {
-        //
+        // Retourner la liste de tous les véhicules
+        return response()->json(Vehicule::all(), 200);
     }
 
     /**
@@ -20,7 +21,20 @@ class VehiculeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Valider les données de la requête
+        $request->validate([
+            'user_id' => 'required|exists:users,id', // Vérifier que l'utilisateur existe
+            'marque' => 'required|string|max:255',
+            'modele' => 'required|string|max:255',
+            'couleur' => 'nullable|string|max:255',
+            'niveauComfort' => 'required|string|unique:vehicules,niveauComfort|max:255',
+        ]);
+
+        // Créer un nouveau véhicule
+        $vehicule = Vehicule::create($request->all());
+
+        // Retourner une réponse avec le véhicule créé
+        return response()->json($vehicule, 201);
     }
 
     /**
@@ -28,7 +42,8 @@ class VehiculeController extends Controller
      */
     public function show(Vehicule $vehicule)
     {
-        //
+        // Retourner un véhicule spécifique
+        return response()->json($vehicule, 200);
     }
 
     /**
@@ -36,7 +51,19 @@ class VehiculeController extends Controller
      */
     public function update(Request $request, Vehicule $vehicule)
     {
-        //
+        // Valider les données de la requête
+        $request->validate([
+            'marque' => 'required|string|max:255',
+            'modele' => 'required|string|max:255',
+            'couleur' => 'nullable|string|max:255',
+            'niveauComfort' => 'required|string|unique:vehicules,niveauComfort,' . $vehicule->id . '|max:255',
+        ]);
+
+        // Mettre à jour le véhicule
+        $vehicule->update($request->all());
+
+        // Retourner une réponse avec le véhicule mis à jour
+        return response()->json($vehicule, 200);
     }
 
     /**
@@ -44,6 +71,10 @@ class VehiculeController extends Controller
      */
     public function destroy(Vehicule $vehicule)
     {
-        //
+        // Supprimer le véhicule
+        $vehicule->delete();
+
+        // Retourner une réponse
+        return response()->json(null, 204);
     }
 }

@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('administrateurs', function (Blueprint $table) {
+        Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
-            $table->string('prenom');
-            $table->string('email');
-            $table->string('password');
+            $table->foreignId('auteur_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('destinataire_id')->constrained('users')->onDelete('cascade');
+            $table->tinyInteger('note'); // exemple: 1-5
+            $table->text('commentaire')->nullable();
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('administrateurs');
+        Schema::dropIfExists('notes');
     }
 };

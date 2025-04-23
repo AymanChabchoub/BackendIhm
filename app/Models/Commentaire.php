@@ -3,19 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Commentaire extends Model
 {
-    // Autoriser l'assignation en masse pour ces champs
     protected $fillable = [
         'text',
         'user_id',
+        'trajet_id'
     ];
 
-    // Relation avec le modèle User
-    public function user(): BelongsTo
+    // Relations (optionnel mais conseillé pour Eloquent)
+    public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function trajet()
+    {
+        return $this->belongsTo(Trajet::class);
     }
 }

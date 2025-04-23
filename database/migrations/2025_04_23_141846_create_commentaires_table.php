@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conducteurs', function (Blueprint $table) {
+        Schema::create('commentaires', function (Blueprint $table) {
             $table->id();
+            $table->text('text');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // auteur
+            $table->foreignId('trajet_id')->constrained()->onDelete('cascade'); // trajet concerné
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conducteurs');
+        Schema::dropIfExists('commentaires');
     }
 };

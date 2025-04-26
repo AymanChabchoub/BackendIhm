@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('marque');
             $table->string('modele');
             $table->string('couleur')->nullable();
-            $table->string('niveauComfort')->unique();
+            $table->string('niveauComfort');//standard ou confort
             $table->timestamps();
         });
         

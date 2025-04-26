@@ -11,8 +11,8 @@ class Trajet extends Model
 
     protected $fillable = [
         'user_id',
-        'date',
-        'heure',
+        'dateDepart',
+        'heureDepart',
         'villeDepart',
         'villeArrivee',
         'prix',
@@ -21,6 +21,7 @@ class Trajet extends Model
         'fumeursAutorises',
         'bagagesAutorises',
         'typesBagages',
+        'vehicule_id'
     ];
 
     public function user()

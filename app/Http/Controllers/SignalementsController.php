@@ -14,6 +14,7 @@ class SignalementsController extends Controller
 
     public function store(Request $request)
     {
+        try{
         $request->validate([
             'emetteur_id' => 'required|exists:users,id',
             'cible_id' => 'required|exists:users,id',
@@ -23,6 +24,12 @@ class SignalementsController extends Controller
         $signalement = Signalements::create($request->all());
 
         return response()->json($signalement, 201);
+        }catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de la création de la réservation',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)

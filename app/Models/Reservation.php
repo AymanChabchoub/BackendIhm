@@ -10,6 +10,8 @@ class Reservation extends Model
         'date',
         'nbPlaces',
         'status',
-        'prixTotal'
+        'prixTotal',
+        'user_id',
+        'trajet_id'
     ];
 }

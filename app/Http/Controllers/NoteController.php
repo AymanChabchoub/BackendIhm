@@ -32,6 +32,8 @@ class NoteController extends Controller
 
     public function update(Request $request, Note $note)
     {
+        try
+        {
         $data = $request->validate([
             'note' => 'sometimes|integer|min:1|max:5',
             'commentaire' => 'nullable|string',
@@ -39,6 +41,12 @@ class NoteController extends Controller
 
         $note->update($data);
         return response()->json($note);
+        }catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de la création de la réservation',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy(Note $note)

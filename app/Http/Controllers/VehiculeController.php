@@ -21,6 +21,7 @@ class VehiculeController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         // Valider les données de la requête
         $request->validate([
             'user_id' => 'required|exists:users,id', // Vérifier que l'utilisateur existe
@@ -29,12 +30,19 @@ class VehiculeController extends Controller
             'couleur' => 'nullable|string|max:255',
             'niveauComfort' => 'required|string|unique:vehicules,niveauComfort|max:255',
         ]);
+        
 
         // Créer un nouveau véhicule
         $vehicule = Vehicule::create($request->all());
 
         // Retourner une réponse avec le véhicule créé
         return response()->json($vehicule, 201);
+        }catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de la création du trajet',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

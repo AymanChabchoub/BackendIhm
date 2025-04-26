@@ -1,17 +1,19 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+   
     public function up(): void
     {
         Schema::create('trajets', function (Blueprint $table) {
             $table->id();
-            $table->date('dateDepart');
-            $table->time('heureDepart');
+            $table->date('dateDepart'); // No default value here
+            $table->time('heureDepart'); // No default value here
             $table->string('villeDepart');
             $table->string('villeArrivee');
             $table->float('prix');
@@ -22,10 +24,10 @@ return new class extends Migration
             $table->string('typesBagages'); // JSON string
             $table->foreignId('vehicule_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // conducteur
-
             $table->timestamps();
         });
     }
+    
 
     public function down(): void
     {

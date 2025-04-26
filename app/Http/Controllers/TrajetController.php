@@ -17,32 +17,47 @@ class TrajetController extends Controller
 
     // Créer un nouveau trajet
     public function store(Request $request)
-{
-    $validated = $request->validate([
-        'date' => 'required|date',
-        'heure' => 'required|date_format:H:i',
-        'villeDepart' => 'required|string',
-        'villeArrivee' => 'required|string',
-        'prix' => 'required|numeric',
-        'placesDisponibles' => 'required|integer',
-        'animauxAutorises' => 'required|boolean',
-        'fumeursAutorises' => 'required|boolean',
-        'bagagesAutorises' => 'required|boolean',
-        'typesBagages' => 'nullable|string',
-    ]);
-
-    // Assure-toi que l'utilisateur est connecté
-    $validated['user_id'] = Auth::id();
-
-
-
-    $trajet = Trajet::create($validated);
-
-    return response()->json([
-        'message' => 'Trajet créé avec succès',
-        'trajet' => $trajet
-    ], 201);
-}
+    {
+        try {
+            $validated = $request->validate([
+                'dateDepart' => 'required|date',
+                'heureDepart' => 'required|date_format:H:i:s',  // Updated format to H:i:s
+                'villeDepart' => 'required|string',
+                'villeArrivee' => 'required|string',
+                'prix' => 'required|numeric',
+                'placesDisponibles' => 'required|integer',
+                'animauxAutorises' => 'required|boolean',
+                'fumeursAutorises' => 'required|boolean',
+                'bagagesAutorises' => 'required|boolean',
+                'typesBagages' => 'required|string',
+                'vehicule_id' => 'required|exists:vehicules,id',
+                'user_id' => 'required|exists:users,id',
+            ]);
+            
+    
+            // Assign default values if not provided
+            if (!$request->has('dateDepart')) {
+                $request->merge(['dateDepart' => now()->toDateString()]);
+            }
+            
+            $validated['heureDepart'] = $validated['heureDepart'] ?? now()->format('H:i');
+    
+            $trajet = Trajet::create($validated);
+    
+            return response()->json([
+                'message' => 'Trajet créé avec succès',
+                'trajet' => $trajet
+            ], 201);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de la création du trajet',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    
 
 
     // Afficher un trajet spécifique
@@ -65,6 +80,8 @@ class TrajetController extends Controller
             'fumeursAutorises' => 'sometimes|boolean',
             'bagagesAutorises' => 'sometimes|boolean',
             'typesBagages' => 'nullable|string',
+            'user_id' => 'required|exists:users,id', // <== ajoute ça
+
         ]);
 
         $trajet->update($validated);
